@@ -1,3 +1,5 @@
+import 'package:moviedb/models/cast.dart';
+import 'package:moviedb/models/cast_resp.dart';
 import 'package:moviedb/models/res_popular.dart';
 
 import '../models/movie.dart';
@@ -32,5 +34,23 @@ class API {
 
   Future<List<Movie>> getSearch(String name) async {
     return getList("/search/movie", param: "query=$name");
+  }
+
+  Future<List<Movie>> getRecommendedMovie(int movieID) async {
+    return getList("/movie/$movieID/recommendations");
+  }
+
+  Future<List<Cast>> getCast(int movieId) async {
+    String url = "/movie/$movieId/credits";
+    final response = await http.get(
+      Uri.parse("$_baseURL$url?api_key=$_apikey"),
+    );
+
+    if (response.statusCode == 200) {
+      var resp = CastResp.fromRawJson(response.body);
+      return resp.cast;
+    } else {
+      throw Exception('Failed to load album');
+    }
   }
 }

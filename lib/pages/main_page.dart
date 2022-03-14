@@ -15,20 +15,23 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Movie>? popularMovie;
   List<Movie>? nowPlayingMovie;
+  bool popularLoading = true;
+  bool nowPlayingLoading = true;
 
   loadMovie() {
     API().getNowPlaying().then((value) {
       setState(() {
         nowPlayingMovie = value;
+        nowPlayingLoading = false;
       });
     });
 
     API().getPopular().then((value) {
       setState(() {
         popularMovie = value;
+        popularLoading = false;
       });
     });
-
   }
 
   @override
@@ -53,15 +56,15 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Column(
           children: [
-            nowPlayingMovie == null
-                ? const Text("Loading")
-                : ListUI(
+            nowPlayingLoading == true
+                ? const Text("Loading...")
+                : MovieList(
                     movieList: nowPlayingMovie!,
                     title: "On Theatre",
                   ),
-            popularMovie == null
-                ? const Text("Loading")
-                : ListUI(
+            popularLoading == true
+                ? const CircularProgressIndicator()
+                : MovieList(
                     movieList: popularMovie!,
                     title: "Popular",
                   ),

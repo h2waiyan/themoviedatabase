@@ -1,22 +1,24 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../models/movie.dart';
 import '../network/api.dart';
+import '../pages/detail_page.dart';
 
-class ListUI extends StatefulWidget {
+class MovieList extends StatefulWidget {
   List<Movie> movieList;
   String title;
-  ListUI({
+  MovieList({
     Key? key,
     required this.movieList,
     required this.title,
   }) : super(key: key);
 
   @override
-  State<ListUI> createState() => _ListUIState();
+  State<MovieList> createState() => _MovieListState();
 }
 
-class _ListUIState extends State<ListUI> {
+class _MovieListState extends State<MovieList> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,31 +35,50 @@ class _ListUIState extends State<ListUI> {
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width,
-            height: 270,
+            height: 245,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.movieList.length,
                 itemBuilder: (BuildContext context, int index) {
                   Movie m = widget.movieList[index];
 
-                  return SizedBox(
-                    width: 125,
-                    height: 217,
-                    child: Card(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 200,
-                            child: Image.network(API.imageURL + m.posterPath),
-                          ),
-                          const SizedBox(
-                            height: 4,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(m.title),
-                          ),
-                        ],
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) => DetailPage(
+                                    movie: m,
+                                  ))));
+                    },
+                    child: Container(
+                      width: 125,
+                      height: 125,
+                      child: Card(
+                        color: Colors.grey[300],
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 0),
+                              child: Hero(
+                                tag: "${m.id}",
+                                child: SizedBox(
+                                  height: 175,
+                                  child: Image(
+                                      image: CachedNetworkImageProvider(
+                                          API.imageURL + m.posterPath)),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(m.title),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );

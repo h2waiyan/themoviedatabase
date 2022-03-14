@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moviedb/network/api.dart';
+import 'package:moviedb/pages/detail_page.dart';
 
 import '../models/movie.dart';
 
@@ -20,17 +21,27 @@ class _SearchListState extends State<SearchList> {
       itemBuilder: (BuildContext contex, int index) {
         Movie m = widget.list[index];
 
-        return Row(
-          children: [
-            SizedBox(
-              height: 180,
-              child: Image.network(API.imageURL + m.posterPath),
-            ),
-            Text(m.title)
-          ],
+        return InkWell(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: ((context) => DetailPage(
+                          movie: m,
+                        ))));
+          },
+          child: Row(
+            children: [
+              SizedBox(
+                height: 180,
+                child: Image.network(API.imageURL + m.posterPath),
+              ),
+              Text(m.title)
+            ],
+          ),
         );
       },
-       separatorBuilder: (BuildContext context, int index) => const Divider(),
+      separatorBuilder: (BuildContext context, int index) => const Divider(),
     );
   }
 }
