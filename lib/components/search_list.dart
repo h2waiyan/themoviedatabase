@@ -28,13 +28,17 @@ class _SearchListState extends State<SearchList> {
                 MaterialPageRoute(
                     builder: ((context) => DetailPage(
                           movie: m,
+                          idx: "search${m.id}",
                         ))));
           },
           child: Row(
             children: [
-              SizedBox(
-                height: 180,
-                child: Image.network(API.imageURL + m.posterPath),
+              Hero(
+                tag: "search${m.id}",
+                child: SizedBox(
+                  height: 180,
+                  child: Image.network(API.imageURL + m.posterPath),
+                ),
               ),
               Text(m.title)
             ],

@@ -11,7 +11,9 @@ import '../models/movie.dart';
 
 class DetailPage extends StatefulWidget {
   Movie movie;
-  DetailPage({Key? key, required this.movie}) : super(key: key);
+  String idx;
+  DetailPage({Key? key, required this.movie, required this.idx})
+      : super(key: key);
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -25,7 +27,6 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
 
     api.getCast(widget.movie.id).then((value) {
       setState(() {
@@ -45,48 +46,79 @@ class _DetailPageState extends State<DetailPage> {
   _cast_info() => SizedBox(
         // width: double.infinity,
         // height: 200,
-        child: ListView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: casts!.length,
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              Cast c = casts![index];
-              return Row(
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: c.profilePath == null
-                          ? Container()
-                          : CircleAvatar(
-                              backgroundImage: CachedNetworkImageProvider(
-                                  API.imageURL + c.profilePath!),
-                            )),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(top: 8.0, left: 8.0),
+              child: Text(
+                "Cast",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: casts!.length,
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  Cast c = casts![index];
+                  return Row(
                     children: [
-                      Text(
-                        c.originalName,
-                        style: TextStyle(color: Colors.white),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: c.profilePath == null
+                            ? const CircleAvatar(
+                                backgroundImage:
+                                    (AssetImage("assets/cast.png")),
+                              )
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(80.0),
+                                child: CachedNetworkImage(
+                                  width: 40,
+                                  height: 40,
+                                  fit: BoxFit.cover,
+                                  imageUrl: API.imageURL + c.profilePath!,
+                                  placeholder: (context, url) =>
+                                      Image.asset('assets/cast.png'),
+                                  
+                                ),
+                              ),
+                        
                       ),
-                      Text(
-                        c.character,
-                        style: TextStyle(color: Colors.white24),
+                      const SizedBox(
+                        width: 12,
                       ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            c.originalName,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          Text(
+                            c.character,
+                            style: const TextStyle(color: Colors.white24),
+                          ),
+                        ],
+                      )
                     ],
-                  )
-                ],
-              );
-            }),
+                  );
+                }),
+          ],
+        ),
       );
 
   _movie_info() => Column(
         children: [
           Hero(
-            tag: "${widget.movie.id}",
+            tag: widget.idx,
             child: SizedBox(
               height: 250,
               child: Image(
@@ -96,7 +128,7 @@ class _DetailPageState extends State<DetailPage> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(widget.movie.title,
+            child: Text(widget.idx,
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -135,7 +167,7 @@ class _DetailPageState extends State<DetailPage> {
               recommendLoading == true
                   ? const CircularProgressIndicator()
                   : MovieList(
-                      movieList: recommendedMovie, title: "Recommended Movies"),
+                      movieList: recommendedMovie, title: "Recommended Movies", forHeroTag: "rec"),
               casts == null ? const CircularProgressIndicator() : _cast_info(),
             ],
           ))

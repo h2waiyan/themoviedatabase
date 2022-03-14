@@ -61,12 +61,14 @@ class _HomePageState extends State<HomePage> {
                 : MovieList(
                     movieList: nowPlayingMovie!,
                     title: "On Theatre",
+                    forHeroTag: "now"
                   ),
             popularLoading == true
-                ? const CircularProgressIndicator()
+                ? const CircularProgressIndicator(color: Colors.red,)
                 : MovieList(
                     movieList: popularMovie!,
                     title: "Popular",
+                    forHeroTag: "pop"
                   ),
           ],
         ));

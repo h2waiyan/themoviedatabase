@@ -8,11 +8,13 @@ import '../pages/detail_page.dart';
 class MovieList extends StatefulWidget {
   List<Movie> movieList;
   String title;
-  MovieList({
-    Key? key,
-    required this.movieList,
-    required this.title,
-  }) : super(key: key);
+  String forHeroTag;
+  MovieList(
+      {Key? key,
+      required this.movieList,
+      required this.title,
+      required this.forHeroTag})
+      : super(key: key);
 
   @override
   State<MovieList> createState() => _MovieListState();
@@ -30,8 +32,14 @@ class _MovieListState extends State<MovieList> {
             padding: const EdgeInsets.only(left: 12, top: 12),
             child: Text(
               widget.title,
-              style: Theme.of(context).textTheme.headline6,
+              style: const TextStyle(
+                  color: Colors.white54,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
+          ),
+          const SizedBox(
+            height: 12,
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width,
@@ -44,12 +52,13 @@ class _MovieListState extends State<MovieList> {
 
                   return InkWell(
                     onTap: () {
+                      // print("TAG>> $index");
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: ((context) => DetailPage(
-                                    movie: m,
-                                  ))));
+                                  movie: m,
+                                  idx: "${widget.forHeroTag}${m.id}"))));
                     },
                     child: Container(
                       width: 125,
@@ -61,12 +70,16 @@ class _MovieListState extends State<MovieList> {
                             Padding(
                               padding: const EdgeInsets.only(top: 0),
                               child: Hero(
-                                tag: "${m.id}",
+                                tag: "${widget.forHeroTag}${m.id}",
+                                // tag: "post",
                                 child: SizedBox(
                                   height: 175,
-                                  child: Image(
-                                      image: CachedNetworkImageProvider(
-                                          API.imageURL + m.posterPath)),
+                                  child: CachedNetworkImage(
+                                    fit: BoxFit.fill,
+                                    imageUrl: API.imageURL + m.posterPath,
+                                    placeholder: (context, url) =>
+                                        Image.asset('assets/movie_loading.png'),
+                                  ),
                                 ),
                               ),
                             ),
