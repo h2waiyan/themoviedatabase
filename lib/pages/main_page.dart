@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
         body: Column(
           children: [
             nowPlayingLoading == true
-                ? const Text("Loading...")
+                ? const CircularProgressIndicator(color: Colors.red,)
                 : MovieList(
                     movieList: nowPlayingMovie!,
                     title: "On Theatre",

@@ -128,7 +128,7 @@ class _DetailPageState extends State<DetailPage> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(widget.idx,
+            child: Text(widget.movie.title,
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
