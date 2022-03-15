@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:moviedb/network/api.dart';
 import 'package:moviedb/pages/detail_page.dart';
@@ -33,11 +34,20 @@ class _SearchListState extends State<SearchList> {
           },
           child: Row(
             children: [
-              Hero(
-                tag: "search${m.id}",
-                child: SizedBox(
-                  height: 180,
-                  child: Image.network(API.imageURL + m.posterPath),
+              Card(
+                child: Hero(
+                  tag: "search${m.id}",
+                  child: SizedBox(
+                    height: 175,
+                    child: CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: API.imageURL + m.posterPath,
+                      placeholder: (context, url) =>
+                          Image.asset('assets/movie_loading.png', width: 117,),
+                    ),
+              
+                    // Image.network(API.imageURL + m.posterPath),
+                  ),
                 ),
               ),
               Text(m.title)

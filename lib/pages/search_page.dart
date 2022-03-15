@@ -42,7 +42,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
         )),
         body: searchResult == null
-            ? Container()
+            ? const Text("Search a movie first")
             : SearchList(list: searchResult!));
   }
 }
