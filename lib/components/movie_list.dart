@@ -76,7 +76,7 @@ class _MovieListState extends State<MovieList> {
                                 child: SizedBox(
                                   height: 175,
                                   width: 125,
-                                  child: Poster(poster : m.posterPath!),
+                                  child: Poster(poster: m.posterPath!),
                                 ),
                               ),
                             ),

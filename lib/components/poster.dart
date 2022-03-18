@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:moviedb/models/movie.dart';
 import 'package:moviedb/network/api.dart';
 
 class Poster extends StatefulWidget {
@@ -14,11 +13,10 @@ class Poster extends StatefulWidget {
 class _PosterState extends State<Poster> {
   @override
   Widget build(BuildContext context) {
-    return 
-     CachedNetworkImage(
+    return CachedNetworkImage(
       fit: BoxFit.fill,
       imageUrl: API.imageURL + widget.poster,
-      placeholder: (context, url) => Image.asset('assets/movie_loading.png'),
+      placeholder: ((context, url) => Image.asset('assets/movie_loading.png')),
     );
   }
 }

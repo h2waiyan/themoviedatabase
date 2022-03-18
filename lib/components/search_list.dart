@@ -56,7 +56,10 @@ class _SearchListState extends State<SearchList> {
                 // crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(m.title),
-                  Text(DateFormat('yyyy').format(m.releaseDate!).toString()),
+                  m.releaseDate == null
+                      ? Container()
+                      : Text(
+                          DateFormat('yyyy').format(m.releaseDate!).toString()),
                 ],
               ),
             ],
