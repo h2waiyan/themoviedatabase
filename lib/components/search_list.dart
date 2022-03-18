@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:moviedb/components/poster.dart';
 import 'package:moviedb/network/api.dart';
 import 'package:moviedb/pages/detail_page.dart';
+import 'package:intl/intl.dart';
 
 import '../models/movie.dart';
 
@@ -39,18 +41,24 @@ class _SearchListState extends State<SearchList> {
                   tag: "search${m.id}",
                   child: SizedBox(
                     height: 175,
-                    child: CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      imageUrl: API.imageURL + m.posterPath,
-                      placeholder: (context, url) =>
-                          Image.asset('assets/movie_loading.png', width: 117,),
-                    ),
-              
+                    width: 125,
+                    child:
+                        // Text("${m.posterPath}")
+                        m.posterPath == null
+                            ? Image.asset('assets/movie_loading.png')
+                            : Poster(poster: m.posterPath!),
                     // Image.network(API.imageURL + m.posterPath),
                   ),
                 ),
               ),
-              Text(m.title)
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(m.title),
+                  Text(DateFormat('yyyy').format(m.releaseDate!).toString()),
+                ],
+              ),
             ],
           ),
         );

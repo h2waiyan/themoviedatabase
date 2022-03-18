@@ -21,24 +21,30 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: TextField(
-          controller: searchTextController,
-          style: const TextStyle(color: Colors.white),
-          textInputAction: TextInputAction.search,
-          onSubmitted: (value) {
-            API().getSearch(searchTextController.text).then((value) {
-              setState(() {
-                searchResult = value;
+            title: SizedBox(
+          height: 45,
+          child: TextField(
+            cursorHeight: 34,
+            controller: searchTextController,
+            style: const TextStyle(color: Colors.black),
+            textInputAction: TextInputAction.search,
+            onSubmitted: (value) {
+              API().getSearch(searchTextController.text).then((value) {
+                setState(() {
+                  searchResult = value;
+                });
               });
-            });
-          },
-          decoration: const InputDecoration(
-            icon: Icon(
-              Icons.search,
-              color: Colors.white,
+            },
+            decoration: InputDecoration(
+              
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(40),
+              ),
+              fillColor: Colors.white,
+              filled: true,
+              hintText: 'Enter a movie name',
+              hintStyle: const TextStyle(color: Colors.black),
             ),
-            hintText: 'Enter a movie name',
-            hintStyle: TextStyle(color: Colors.white),
           ),
         )),
         body: searchResult == null

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:moviedb/components/poster.dart';
 
 import '../models/movie.dart';
 import '../network/api.dart';
@@ -43,7 +44,7 @@ class _MovieListState extends State<MovieList> {
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width,
-            height: 245,
+            height: 228,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.movieList.length,
@@ -74,12 +75,8 @@ class _MovieListState extends State<MovieList> {
                                 // tag: "post",
                                 child: SizedBox(
                                   height: 175,
-                                  child: CachedNetworkImage(
-                                    fit: BoxFit.fill,
-                                    imageUrl: API.imageURL + m.posterPath,
-                                    placeholder: (context, url) =>
-                                        Image.asset('assets/movie_loading.png'),
-                                  ),
+                                  width: 125,
+                                  child: Poster(poster : m.posterPath!),
                                 ),
                               ),
                             ),
@@ -88,7 +85,11 @@ class _MovieListState extends State<MovieList> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(4.0),
-                              child: Text(m.title),
+                              child: Text(
+                                m.title,
+                                maxLines: 2,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ],
                         ),

@@ -19,14 +19,14 @@ class Movie {
   });
 
   bool adult;
-  String backdropPath;
+  String? backdropPath;
   List<int> genreIds;
   int id;
   String originalLanguage;
   String originalTitle;
   String overview;
   double popularity;
-  String posterPath;
+  String? posterPath;
   DateTime? releaseDate;
   String title;
   bool video;
@@ -39,15 +39,20 @@ class Movie {
 
   factory Movie.fromJson(Map<String, dynamic> json) => Movie(
         adult: json["adult"],
-        backdropPath: json["backdrop_path"] ?? "",
+        backdropPath:
+            json["backdrop_path"] == null || json["backdrop_path"] == ""
+                ? null
+                : json["backdrop_path"],
         genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
         id: json["id"],
         originalLanguage: json["original_language"],
         originalTitle: json["original_title"],
         overview: json["overview"],
         popularity: json["popularity"].toDouble(),
-        posterPath: json["poster_path"],
-        releaseDate: json["release_date"] == ""
+        posterPath: json["poster_path"] == "" || json["poster_path"] == null
+            ? null
+            : json["poster_path"],
+        releaseDate: json["release_date"] == "" || json["release_date"] == null
             ? null
             : DateTime.parse(json["release_date"]),
         title: json["title"],
@@ -65,7 +70,7 @@ class Movie {
         "original_title": originalTitle,
         "overview": overview,
         "popularity": popularity,
-        "poster_path": posterPath,
+        "poster_path": posterPath ?? "",
         "release_date": releaseDate == null
             ? ""
             : "${releaseDate!.year.toString().padLeft(4, '0')}-${releaseDate!.month.toString().padLeft(2, '0')}-${releaseDate!.day.toString().padLeft(2, '0')}",

@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:moviedb/components/blur_background.dart';
 import 'package:moviedb/components/movie_list.dart';
+import 'package:moviedb/components/poster.dart';
 import 'package:moviedb/models/cast.dart';
 import 'package:moviedb/network/api.dart';
 
@@ -27,7 +28,6 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   void initState() {
-
     api.getCast(widget.movie.id).then((value) {
       setState(() {
         casts = value;
@@ -87,10 +87,8 @@ class _DetailPageState extends State<DetailPage> {
                                   imageUrl: API.imageURL + c.profilePath!,
                                   placeholder: (context, url) =>
                                       Image.asset('assets/cast.png'),
-                                  
                                 ),
                               ),
-                        
                       ),
                       const SizedBox(
                         width: 12,
@@ -121,9 +119,8 @@ class _DetailPageState extends State<DetailPage> {
             tag: widget.idx,
             child: SizedBox(
               height: 250,
-              child: Image(
-                  image: CachedNetworkImageProvider(
-                      API.imageURL + widget.movie.posterPath)),
+              child: Poster(poster: widget.movie.posterPath!)
+
             ),
           ),
           Padding(
@@ -154,9 +151,10 @@ class _DetailPageState extends State<DetailPage> {
       ),
       body: Stack(
         children: [
+        widget.movie.backdropPath != null ?
           BlurBackground(
-            backdrop_path: widget.movie.backdropPath,
-          ),
+            backdrop_path: widget.movie.backdropPath!,
+          ) : Container(),
           SingleChildScrollView(
               child: Column(
             children: [
@@ -167,7 +165,9 @@ class _DetailPageState extends State<DetailPage> {
               recommendLoading == true
                   ? const CircularProgressIndicator()
                   : MovieList(
-                      movieList: recommendedMovie, title: "Recommended Movies", forHeroTag: "rec"),
+                      movieList: recommendedMovie,
+                      title: "Recommended Movies",
+                      forHeroTag: "rec"),
               casts == null ? const CircularProgressIndicator() : _cast_info(),
             ],
           ))
