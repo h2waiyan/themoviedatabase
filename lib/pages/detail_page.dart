@@ -2,9 +2,11 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:moviedb/components/blur_background.dart';
 import 'package:moviedb/components/movie_list.dart';
 import 'package:moviedb/components/poster.dart';
+import 'package:moviedb/controller/details_controller.dart';
 import 'package:moviedb/models/cast.dart';
 import 'package:moviedb/network/api.dart';
 
@@ -26,21 +28,13 @@ class _DetailPageState extends State<DetailPage> {
   List<Movie> recommendedMovie = [];
   bool recommendLoading = true;
 
+  final DetailsController dc = Get.put(DetailsController());
+
   @override
   void initState() {
-    api.getCast(widget.movie.id).then((value) {
-      setState(() {
-        casts = value;
-      });
-    });
-
-    api.getRecommendedMovie(widget.movie.id).then((value) {
-      setState(() {
-        recommendedMovie = value;
-        recommendLoading = false;
-      });
-    });
     super.initState();
+    dc.loadCast(widget.movie.id);
+    dc.loadRecommend(widget.movie.id);
   }
 
   _cast_info() => SizedBox(
@@ -62,13 +56,13 @@ class _DetailPageState extends State<DetailPage> {
             const SizedBox(
               height: 10,
             ),
-            ListView.builder(
+            Obx((() => ListView.builder(
                 scrollDirection: Axis.vertical,
-                itemCount: casts!.length,
+                itemCount: dc.casts.length,
                 shrinkWrap: true,
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
-                  Cast c = casts![index];
+                  Cast c = dc.casts[index];
                   return Row(
                     children: [
                       Padding(
@@ -102,26 +96,33 @@ class _DetailPageState extends State<DetailPage> {
                           ),
                           Text(
                             c.character,
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            softWrap: false,
                             style: const TextStyle(color: Colors.white24),
                           ),
                         ],
                       )
                     ],
                   );
-                }),
+                })))
           ],
         ),
       );
+
+  Widget _recommendList() => dc.recommend.isEmpty
+      ? const CircularProgressIndicator()
+      : MovieList(
+          movieList: dc.recommend,
+          title: "Recommended Movies",
+          forHeroTag: "rec");
 
   _movie_info() => Column(
         children: [
           Hero(
             tag: widget.idx,
             child: SizedBox(
-              height: 250,
-              child: Poster(poster: widget.movie.posterPath!)
-
-            ),
+                height: 250, child: Poster(poster: widget.movie.posterPath!)),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -151,10 +152,11 @@ class _DetailPageState extends State<DetailPage> {
       ),
       body: Stack(
         children: [
-        widget.movie.backdropPath != null ?
-          BlurBackground(
-            backdrop_path: widget.movie.backdropPath!,
-          ) : Container(),
+          widget.movie.backdropPath != null
+              ? BlurBackground(
+                  backdrop_path: widget.movie.backdropPath!,
+                )
+              : Container(),
           SingleChildScrollView(
               child: Column(
             children: [
@@ -162,13 +164,10 @@ class _DetailPageState extends State<DetailPage> {
               const SizedBox(
                 height: 25,
               ),
-              recommendLoading == true
+              Obx(() => _recommendList()),
+              Obx(() => dc.casts.isEmpty
                   ? const CircularProgressIndicator()
-                  : MovieList(
-                      movieList: recommendedMovie,
-                      title: "Recommended Movies",
-                      forHeroTag: "rec"),
-              casts == null ? const CircularProgressIndicator() : _cast_info(),
+                  : _cast_info()),
             ],
           ))
         ],

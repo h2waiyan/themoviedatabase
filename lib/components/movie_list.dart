@@ -1,9 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:moviedb/components/poster.dart';
-
 import '../models/movie.dart';
-import '../network/api.dart';
 import '../pages/detail_page.dart';
 
 class MovieList extends StatefulWidget {
@@ -53,13 +51,8 @@ class _MovieListState extends State<MovieList> {
 
                   return InkWell(
                     onTap: () {
-                      // print("TAG>> $index");
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) => DetailPage(
-                                  movie: m,
-                                  idx: "${widget.forHeroTag}${m.id}"))));
+                      Get.to(DetailPage(
+                          movie: m, idx: "${widget.forHeroTag}${m.id}"));
                     },
                     child: Container(
                       width: 125,

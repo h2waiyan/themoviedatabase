@@ -1,7 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:moviedb/components/poster.dart';
-import 'package:moviedb/network/api.dart';
 import 'package:moviedb/pages/detail_page.dart';
 import 'package:intl/intl.dart';
 
@@ -26,13 +25,10 @@ class _SearchListState extends State<SearchList> {
 
         return InkWell(
           onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: ((context) => DetailPage(
-                          movie: m,
-                          idx: "search${m.id}",
-                        ))));
+            Get.to(DetailPage(
+              movie: m,
+              idx: "search${m.id}",
+            ));
           },
           child: Row(
             children: [
@@ -42,12 +38,9 @@ class _SearchListState extends State<SearchList> {
                   child: SizedBox(
                     height: 175,
                     width: 125,
-                    child:
-                        // Text("${m.posterPath}")
-                        m.posterPath == null
-                            ? Image.asset('assets/movie_loading.png')
-                            : Poster(poster: m.posterPath!),
-                    // Image.network(API.imageURL + m.posterPath),
+                    child: m.posterPath == null
+                        ? Image.asset('assets/movie_loading.png')
+                        : Poster(poster: m.posterPath!),
                   ),
                 ),
               ),
@@ -55,7 +48,10 @@ class _SearchListState extends State<SearchList> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 // crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(m.title),
+                  Text(
+                    m.title,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   m.releaseDate == null
                       ? Container()
                       : Text(

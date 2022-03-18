@@ -3,8 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:moviedb/network/api.dart';
 
-import '../models/movie.dart';
-
 class BlurBackground extends StatefulWidget {
   String backdrop_path;
   BlurBackground({Key? key, required this.backdrop_path}) : super(key: key);

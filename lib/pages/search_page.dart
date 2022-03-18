@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:moviedb/components/search_list.dart';
-import 'package:moviedb/network/api.dart';
-
-import '../components/movie_list.dart';
-import '../models/movie.dart';
+import 'package:moviedb/controller/home_controller.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key? key}) : super(key: key);
@@ -13,9 +11,13 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  var searchMovie = "Hi";
-  List<Movie>? searchResult;
   TextEditingController searchTextController = TextEditingController();
+
+  final HomeController c = Get.put(HomeController());
+
+  Widget _searchMovieList() => c.searchedMoives.isEmpty
+      ? const Text("Search a movie first")
+      : SearchList(list: c.searchedMoives);
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +31,9 @@ class _SearchPageState extends State<SearchPage> {
             style: const TextStyle(color: Colors.black),
             textInputAction: TextInputAction.search,
             onSubmitted: (value) {
-              API().getSearch(searchTextController.text).then((value) {
-                setState(() {
-                  searchResult = value;
-                });
-              });
+              c.loadSearch(searchTextController.text);
             },
             decoration: InputDecoration(
-              
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(40),
               ),
@@ -47,8 +44,6 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ),
         )),
-        body: searchResult == null
-            ? const Text("Search a movie first")
-            : SearchList(list: searchResult!));
+        body: Obx(() => _searchMovieList()));
   }
 }

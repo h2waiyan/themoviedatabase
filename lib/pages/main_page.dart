@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:moviedb/models/movie.dart';
-import 'package:moviedb/network/api.dart';
+import 'package:get/get.dart';
+import 'package:moviedb/controller/home_controller.dart';
 import 'package:moviedb/pages/search_page.dart';
 
 import '../components/movie_list.dart';
@@ -13,32 +13,30 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Movie>? popularMovie;
-  List<Movie>? nowPlayingMovie;
-  bool popularLoading = true;
-  bool nowPlayingLoading = true;
-
-  loadMovie() {
-    API().getNowPlaying().then((value) {
-      setState(() {
-        nowPlayingMovie = value;
-        nowPlayingLoading = false;
-      });
-    });
-
-    API().getPopular().then((value) {
-      setState(() {
-        popularMovie = value;
-        popularLoading = false;
-      });
-    });
-  }
+  final HomeController c = Get.put(HomeController());
 
   @override
   void initState() {
     super.initState();
-    loadMovie();
+    c.loadNowPlaying();
+    c.loadPopular();
   }
+
+  Widget _nowPlayingMovies() => c.nowPlayingMovies.isEmpty
+      ? const CircularProgressIndicator(
+          color: Colors.red,
+        )
+      : MovieList(
+          movieList: c.nowPlayingMovies,
+          title: "In Theatre",
+          forHeroTag: "now");
+
+  Widget _popularMoives() => c.popularMovies.isEmpty
+      ? const CircularProgressIndicator(
+          color: Colors.red,
+        )
+      : MovieList(
+          movieList: c.popularMovies, title: "Popular", forHeroTag: "pop");
 
   @override
   Widget build(BuildContext context) {
@@ -54,23 +52,8 @@ class _HomePageState extends State<HomePage> {
                 icon: const Icon(Icons.search))
           ],
         ),
-        body: Column(
-          children: [
-            nowPlayingLoading == true
-                ? const CircularProgressIndicator(color: Colors.red,)
-                : MovieList(
-                    movieList: nowPlayingMovie!,
-                    title: "In Theatre",
-                    forHeroTag: "now"
-                  ),
-            popularLoading == true
-                ? const CircularProgressIndicator(color: Colors.red,)
-                : MovieList(
-                    movieList: popularMovie!,
-                    title: "Popular",
-                    forHeroTag: "pop"
-                  ),
-          ],
-        ));
+        body: Obx(() {
+          return Column(children: [_nowPlayingMovies(), _popularMoives()]);
+        }));
   }
 }
