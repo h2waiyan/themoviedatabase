@@ -46,8 +46,11 @@ class _HomePageState extends State<HomePage> {
           actions: [
             IconButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: ((context) => SearchPage())));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => SearchPage()),
+                          fullscreenDialog: true));
                 },
                 icon: const Icon(Icons.search))
           ],
